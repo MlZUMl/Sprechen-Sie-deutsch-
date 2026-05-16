@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beach Garden — Sprechen Deutsch</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sea: #1a6b8a;
+  --sea-dark: #0e4a63;
+  --sea-light: #2d9fc5;
+  --turquoise: #00b4c4;
+  --sand: #f5e6c8;
+  --sand-light: #fdf6e8;
+  --sand-dark: #d4b896;
+  --text: #1a2e38;
+  --text-light: #5a7a88;
+  --green: #3aaa6b;
+  --coral: #e8604a;
+  --gold: #d4a017;
+  --shadow: 0 4px 20px rgba(26,107,138,0.12);
+  --shadow-lg: 0 8px 40px rgba(26,107,138,0.18);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--sand-light);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ══ HEADER ══ */
+.hdr {
+  background: linear-gradient(135deg, var(--sea-dark) 0%, var(--sea) 55%, var(--sea-light) 100%);
+  padding: 13px 16px 14px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 18px rgba(0,0,0,0.22);
+}
+.hdr-top {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 11px; min-height: 46px;
+}
+.logo { height: 40px; filter: brightness(0) invert(1); flex-shrink: 0; }
+.logo-fb { display:none; font-family:'Playfair Display',serif; color:white; font-size:0.85rem; font-style:italic; flex-shrink:0; }
+.hdr-info { flex: 1; }
+.hdr-info h1 { font-family:'Playfair Display',serif; font-size:1rem; color:white; line-height:1.2; }
+.hdr-info p { font-size:0.67rem; color:rgba(255,255,255,0.68); margin-top:1px; }
+.stars { color: var(--gold); font-size:0.68rem; letter-spacing:1px; }
+.hdr-cat {
+  display:none; font-size:0.9rem; font-weight:600;
+  color:white; flex:1; text-align:center;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.hdr-cat.on { display:block; }
+.back-btn {
+  display:none; align-items:center; gap:4px;
+  background:rgba(255,255,255,0.18); border:none;
+  border-radius:20px; padding:6px 12px 6px 8px;
+  color:white; font-size:0.79rem;
+  font-family:'DM Sans',sans-serif; font-weight:500;
+  cursor:pointer; flex-shrink:0;
+}
+.back-btn.on { display:flex; }
+
+/* Barre recherche */
+.srch { position:relative; }
+.srch input {
+  width:100%; padding:8px 34px 8px 32px;
+  border-radius:20px; border:none;
+  background:rgba(255,255,255,0.16);
+  color:white; font-size:0.83rem;
+  font-family:'DM Sans',sans-serif; outline:none;
+}
+.srch input::placeholder { color:rgba(255,255,255,0.52); }
+.srch-ico { position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:0.9rem; pointer-events:none; }
+.srch-x { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(255,255,255,0.6); font-size:0.95rem; cursor:pointer; display:none; }
+.srch-x.on { display:block; }
+
+/* ══ TABS ══ */
+.tabs { background:white; border-bottom:2px solid var(--sand); display:flex; }
+.tab {
+  flex:1; padding:10px 6px; border:none; background:none;
+  font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:500;
+  color:var(--text-light); cursor:pointer;
+  border-bottom:3px solid transparent; margin-bottom:-2px;
+  display:flex; align-items:center; justify-content:center; gap:5px;
+  transition:color .18s, border-color .18s;
+}
+.tab.on { color:var(--sea); border-bottom-color:var(--sea); font-weight:600; }
+
+/* Stats */
+.stats {
+  background:white; padding:7px 16px;
+  display:flex; gap:14px; border-bottom:1px solid var(--sand);
+  font-size:0.73rem; color:var(--text-light);
+}
+.stat b { color:var(--sea); }
+
+/* ══ VIEWS ══ */
+.view { display:none; }
+.view.on { display:block; }
+.main { padding:13px 13px 88px; }
+
+/* ══ GRILLE CATÉGORIES ══ */
+.cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.cat-card {
+  background:white; border-radius:16px;
+  padding:17px 13px 15px;
+  box-shadow:var(--shadow); cursor:pointer;
+  transition:transform .14s, box-shadow .14s;
+  display:flex; flex-direction:column;
+  align-items:flex-start; gap:6px;
+  border-bottom:3px solid var(--sea);
+  position:relative; overflow:hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.cat-card:active { transform:scale(0.96); box-shadow:var(--shadow-lg); }
+.cat-card::after { content:'›'; position:absolute; right:11px; bottom:13px; color:var(--sea); font-size:1.05rem; opacity:0.5; }
+.cc-em { font-size:1.8rem; line-height:1; }
+.cc-nm { font-size:0.79rem; font-weight:600; color:var(--text); line-height:1.3; }
+.cc-ct { font-size:0.69rem; color:var(--text-light); background:var(--sand); border-radius:20px; padding:2px 8px; }
+
+/* ══ CARTE PHRASE — mode oral ══ */
+.phrase-card {
+  background:white; border-radius:14px;
+  margin-bottom:10px; box-shadow:var(--shadow);
+  overflow:hidden; border-left:4px solid var(--sea);
+}
+.phrase-card.fav { border-left-color:var(--gold); }
+
+.card-fr {
+  padding:13px 14px 4px;
+  font-size:0.8rem; color:var(--text-light);
+  display:flex; align-items:center; gap:7px;
+}
+.card-fr .ce { font-size:1.2rem; flex-shrink:0; }
+
+/* LA PHONÉTIQUE EST LE HÉROS */
+.card-ph {
+  padding:4px 14px 12px 14px;
+  font-size:1.15rem; font-weight:700;
+  color:var(--sea-dark);
+  line-height:1.4; letter-spacing:0.2px;
+}
+
+.card-btns {
+  padding:0 12px 11px;
+  display:flex; gap:7px; justify-content:flex-end;
+  align-items:center;
+}
+.btn-listen {
+  background:linear-gradient(135deg, var(--sea), var(--sea-light));
+  color:white; border:none; border-radius:22px;
+  padding:8px 18px; font-size:0.82rem;
+  font-family:'DM Sans',sans-serif; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; gap:6px;
+  box-shadow:0 2px 10px rgba(26,107,138,0.28);
+  transition:transform .12s;
+  letter-spacing:0.2px;
+}
+.btn-listen:active { transform:scale(0.95); }
+.btn-listen.playing { background:linear-gradient(135deg,var(--turquoise),var(--green)); }
+.btn-fav {
+  background:none; border:1.5px solid var(--sand-dark);
+  border-radius:20px; padding:5px 11px;
+  font-size:0.77rem; cursor:pointer;
+  font-family:'DM Sans',sans-serif; color:var(--text-light);
+  transition:all .18s;
+}
+.btn-fav.on { background:var(--gold); border-color:var(--gold); color:white; }
+
+/* ══ QUIZ ORAL ══ */
+.qz-inner { padding:13px 13px 88px; }
+.qcard { background:white; border-radius:18px; padding:20px 16px; box-shadow:var(--shadow-lg); margin-bottom:11px; }
+.qprog { background:var(--sand); border-radius:8px; height:5px; margin-bottom:13px; overflow:hidden; }
+.qprog-bar { height:100%; background:linear-gradient(90deg,var(--sea),var(--turquoise)); border-radius:8px; transition:width .4s; }
+.qlbl { font-size:0.7rem; text-transform:uppercase; letter-spacing:1.3px; color:var(--text-light); margin-bottom:12px; }
+
+/* Zone audio centrale dans le quiz */
+.q-audio-zone {
+  background:linear-gradient(135deg, var(--sea-dark), var(--sea));
+  border-radius:14px; padding:22px 16px;
+  text-align:center; margin-bottom:18px;
+}
+.q-audio-label { font-size:0.75rem; color:rgba(255,255,255,0.65); margin-bottom:12px; letter-spacing:0.5px; }
+.q-listen-btn {
+  background:rgba(255,255,255,0.18); border:2px solid rgba(255,255,255,0.4);
+  color:white; border-radius:50px; padding:12px 28px;
+  font-size:1rem; font-family:'DM Sans',sans-serif; font-weight:700;
+  cursor:pointer; transition:all .18s; letter-spacing:0.3px;
+  backdrop-filter:blur(4px);
+}
+.q-listen-btn:active { transform:scale(0.95); }
+.q-listen-btn.playing { background:rgba(255,255,255,0.28); border-color:white; }
+.q-emoji { font-size:1.8rem; display:block; margin-bottom:8px; }
+.q-instr { font-size:0.78rem; color:rgba(255,255,255,0.7); margin-top:10px; }
+
+.qopts { display:grid; gap:9px; }
+.qopt {
+  padding:13px 15px; border-radius:12px;
+  border:2px solid var(--sand-dark); background:var(--sand-light);
+  font-family:'DM Sans',sans-serif; font-size:0.88rem;
+  cursor:pointer; text-align:left; transition:all .18s; line-height:1.35;
+}
+.qopt:hover { border-color:var(--sea); background:rgba(26,107,138,0.04); }
+.qopt.correct { border-color:var(--green); background:rgba(58,170,107,0.09); color:var(--green); font-weight:600; }
+.qopt.wrong { border-color:var(--coral); background:rgba(232,96,74,0.09); color:var(--coral); }
+.qfb { margin-top:11px; padding:10px 13px; border-radius:11px; font-size:0.86rem; font-weight:500; display:none; }
+.qfb.on { display:block; }
+.qfb.c { background:rgba(58,170,107,0.1); color:var(--green); }
+.qfb.w { background:rgba(232,96,74,0.1); color:var(--coral); }
+.qnext { width:100%; margin-top:10px; background:linear-gradient(135deg,var(--sea),var(--sea-light)); color:white; border:none; border-radius:13px; padding:13px; font-size:0.9rem; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; display:none; box-shadow:var(--shadow); }
+.qnext.on { display:block; }
+.qresult { background:linear-gradient(135deg,var(--sea-dark),var(--sea)); color:white; border-radius:20px; padding:28px 20px; text-align:center; box-shadow:var(--shadow-lg); }
+.qresult h2 { font-family:'Playfair Display',serif; font-size:1.9rem; margin-bottom:6px; }
+.qresult p { color:rgba(255,255,255,0.76); margin-bottom:16px; font-size:0.9rem; line-height:1.5; }
+.qrestart { background:var(--gold); color:white; border:none; border-radius:12px; padding:11px 24px; font-size:0.9rem; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; }
+
+/* ══ FAVORIS ══ */
+.empty { text-align:center; padding:55px 20px; color:var(--text-light); }
+.empty .big { font-size:2.8rem; display:block; margin-bottom:11px; }
+.empty p { font-size:0.86rem; line-height:1.6; }
+
+/* Recherche */
+.sr-info { font-size:0.75rem; color:var(--text-light); padding:7px 4px 5px; }
+.nores { text-align:center; padding:48px 20px; color:var(--text-light); }
+.nores .big { font-size:2.5rem; display:block; margin-bottom:9px; }
+mark { background:rgba(0,180,196,0.2); color:var(--sea-dark); border-radius:3px; padding:0 2px; }
+
+/* ══ BOTTOM NAV ══ */
+.bnav {
+  position:fixed; bottom:0; left:0; right:0;
+  background:white; border-top:1px solid var(--sand);
+  display:flex; box-shadow:0 -3px 16px rgba(0,0,0,0.07); z-index:50;
+}
+.bnav-btn {
+  flex:1; border:none; background:none; padding:8px 6px 6px;
+  font-family:'DM Sans',sans-serif; font-size:0.66rem; font-weight:500;
+  color:var(--text-light); cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  transition:color .18s; -webkit-tap-highlight-color:transparent;
+}
+.bnav-btn .ni { font-size:1.2rem; }
+.bnav-btn.on { color:var(--sea); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-top">
+    <button class="back-btn" id="backBtn" onclick="goBack()">← Retour</button>
+    <img class="logo" id="logoImg"
+      src="https://static.secureholiday.net/static/CMS/photos/000/062/000062239.png?w=600&format=webp"
+      alt="Les Méditerranées"
+      onerror="this.style.display='none';document.getElementById('logoFb').style.display='inline'">
+    <span class="logo-fb" id="logoFb">Les Méditerranées</span>
+    <div class="hdr-info" id="hInfo">
+      <div class="stars">★★★★★</div>
+      <h1>Beach Garden</h1>
+      <p>Guide Deutsch · Oral uniquement 🎧</p>
+    </div>
+    <div class="hdr-cat" id="hCat"></div>
+  </div>
+  <div class="srch">
+    <span class="srch-ico">🔍</span>
+    <input type="text" id="srchInput" placeholder="Rechercher une phrase…" oninput="onSearch(this.value)">
+    <button class="srch-x" id="srchX" onclick="clearSearch()">✕</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab on" id="tab-ph" onclick="goTab('ph')">💬 Phrasebook</button>
+  <button class="tab" id="tab-qz" onclick="goTab('qz')">🎧 Quiz oral</button>
+  <button class="tab" id="tab-fv" onclick="goTab('fv')">⭐ Favoris</button>
+</div>
+<div class="stats">
+  <div class="stat">⭐ <b id="stFav">0</b> favoris</div>
+  <div class="stat">🎯 Quiz : <b id="stScore">—</b></div>
+  <div class="stat">💬 <b>120</b> phrases</div>
+</div>
+
+<!-- VIEW PHRASEBOOK -->
+<div class="view on" id="view-ph">
+  <div class="main" id="scrCats"><div class="cat-grid" id="catGrid"></div></div>
+  <div class="main" id="scrPh" style="display:none"><div id="phList"></div></div>
+  <div class="main" id="scrSrch" style="display:none">
+    <div class="sr-info" id="srInfo"></div>
+    <div id="srList"></div>
+  </div>
+</div>
+
+<!-- VIEW QUIZ -->
+<div class="view" id="view-qz">
+  <div class="qz-inner" id="qzWrap"></div>
+</div>
+
+<!-- VIEW FAVORIS -->
+<div class="view" id="view-fv">
+  <div class="main" id="fvContent"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <button class="bnav-btn on" id="nav-ph" onclick="goTab('ph')"><span class="ni">💬</span>Phrasebook</button>
+  <button class="bnav-btn" id="nav-qz" onclick="goTab('qz')"><span class="ni">🎧</span>Quiz oral</button>
+  <button class="bnav-btn" id="nav-fv" onclick="goTab('fv')"><span class="ni">⭐</span>Favoris</button>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   DONNÉES
+   de = texte allemand complet pour TTS
+   ph = phonétique française (héros visuel)
+══════════════════════════════════════ */
+const P = [
+  // ── Accueil & Arrivée
+  {c:0,e:"👋",fr:"Bonjour, bienvenue au camping Beach Garden !",de:"Guten Tag, herzlich willkommen im Camping Beach Garden!",ph:"Gouten-tag, hèrtslish vil-komène im Kamping Bitch-Gardène!"},
+  {c:0,e:"📋",fr:"Votre nom, s'il vous plaît ?",de:"Ihren Namen, bitte?",ph:"Irène Namène, biteu?"},
+  {c:0,e:"📅",fr:"Quelle est votre date d'arrivée ?",de:"Was ist Ihr Ankunftsdatum?",ph:"Vass ist ir Ankounfts-datom?"},
+  {c:0,e:"🗓️",fr:"Combien de nuits restez-vous ?",de:"Wie viele Nächte bleiben Sie bei uns?",ph:"Vi fileu Nèkteu blaïbène zi baï ounss?"},
+  {c:0,e:"🔑",fr:"Voici votre bracelet d'accès.",de:"Hier ist Ihr Zugangsarmband.",ph:"Hir ist ir Tsougangs-arm-band."},
+  {c:0,e:"🗺️",fr:"Voici le plan du camping.",de:"Hier ist der Campingplan.",ph:"Hir ist dèr Kamping-plan."},
+  {c:0,e:"📍",fr:"Votre emplacement est le numéro…",de:"Ihr Stellplatz hat die Nummer…",ph:"Ir Chtel-platss hat di Noumèr…"},
+  {c:0,e:"⏰",fr:"Le check-in commence à quinze heures.",de:"Der Check-in beginnt ab fünfzehn Uhr.",ph:"Dèr Tchèk-in bèguint ap fuunftsèn Ouir."},
+  {c:0,e:"🚪",fr:"Le check-out est avant dix heures.",de:"Der Check-out ist vor zehn Uhr.",ph:"Dèr Tchèk-aout ist for tsèn Ouir."},
+  {c:0,e:"😊",fr:"Bon séjour parmi nous !",de:"Wir wünschen Ihnen einen schönen Aufenthalt!",ph:"Vir vuunchène irène aïnène cheunène Aoufèn-talt!"},
+  {c:0,e:"🚗",fr:"Avez-vous une voiture ?",de:"Haben Sie ein Auto dabei?",ph:"Habène zi aïn Aouto dabaï?"},
+  {c:0,e:"📧",fr:"Votre email de confirmation ?",de:"Wie lautet Ihre Bestätigungs-E-Mail-Adresse?",ph:"Vi laoutèt irreu Beu-chtètigungs-é-Mèïl-adrèsseu?"},
+
+  // ── Hébergements
+  {c:1,e:"🏠",fr:"Votre mobil-home a une terrasse.",de:"Ihr Mobilheim hat eine Terrasse.",ph:"Ir Mobil-haïm hat aïneu Tèrasse."},
+  {c:1,e:"❄️",fr:"Le mobil-home est climatisé.",de:"Das Mobilheim hat eine Klimaanlage.",ph:"Dass Mobil-haïm hat aïneu Klima-anlageu."},
+  {c:1,e:"🍳",fr:"La cuisine est entièrement équipée.",de:"Die Küche ist vollständig ausgestattet.",ph:"Di Kuicheu ist fol-chtèndig aous-guéchtatèt."},
+  {c:1,e:"⛺",fr:"Votre emplacement tente ou camping-car.",de:"Ihr Zelt- oder Wohnmobil-Stellplatz.",ph:"Ir Tsèlt- ödèr Von-mobil-Chtelplatss."},
+  {c:1,e:"🔌",fr:"La borne électrique est incluse.",de:"Der Stromanschluss ist inklusive.",ph:"Dèr Chtrom-an-chloss ist inklouziveu."},
+  {c:1,e:"👨‍👩‍👧",fr:"Ce mobil-home est pour quatre personnes.",de:"Dieses Mobilheim ist für vier Personen.",ph:"Dizèss Mobil-haïm ist fuir fir Pèrzonène."},
+  {c:1,e:"🏖️",fr:"La Maison des Sables est face à la mer.",de:"Das Maison des Sables liegt direkt am Meer.",ph:"Dass Mèzon-dé-Sableu light dirèkt am Mèr."},
+  {c:1,e:"🛏️",fr:"Les draps et serviettes sont inclus.",de:"Bettwäsche und Handtücher sind inklusive.",ph:"Bèt-vècheu ount Hant-tuichèr zint inklouziveu."},
+  {c:1,e:"🐕",fr:"Les animaux de compagnie ne sont pas acceptés.",de:"Haustiere sind leider nicht erlaubt.",ph:"Haous-tirreu zint laïdèr nichtt ère-laoubt."},
+  {c:1,e:"📺",fr:"Le mobil-home a une télévision.",de:"Das Mobilheim hat einen Fernseher.",ph:"Dass Mobil-haïm hat aïnène Fèrn-zèuèr."},
+
+  // ── Réservation
+  {c:2,e:"📞",fr:"Avez-vous une réservation ?",de:"Haben Sie eine Reservierung?",ph:"Habène zi aïneu Rézèrvirong?"},
+  {c:2,e:"✅",fr:"Votre réservation est confirmée.",de:"Ihre Reservierung ist bestätigt.",ph:"Irreu Rézèrvirong ist beu-chtètigt."},
+  {c:2,e:"💶",fr:"Le tarif est de … euros par nuit.",de:"Der Preis beträgt … Euro pro Nacht.",ph:"Dèr Praïss beu-trègt … Oy-ro pro Nakht."},
+  {c:2,e:"💳",fr:"Acceptez-vous la carte bancaire ?",de:"Akzeptieren Sie Kreditkarte?",ph:"Ak-tsèp-tirène zi Krèdit-karteu?"},
+  {c:2,e:"❌",fr:"Annulation gratuite jusqu'à sept jours avant.",de:"Kostenlose Stornierung bis sieben Tage vor der Anreise.",ph:"Kostèn-lozeu Chtornirong biss zibène Tageu for dèr An-raïzeu."},
+  {c:2,e:"⬇️",fr:"Un acompte de trente pourcent est demandé.",de:"Eine Anzahlung von dreißig Prozent ist erforderlich.",ph:"Aïneu An-tsaloungt fon draïssig Protsènt ist ère-fordèrlikh."},
+  {c:2,e:"📅",fr:"Quelle est votre date de départ ?",de:"Wann reisen Sie ab?",ph:"Vann raïzène zi ap?"},
+  {c:2,e:"🔄",fr:"Souhaitez-vous prolonger votre séjour ?",de:"Möchten Sie Ihren Aufenthalt verlängern?",ph:"Meukhtène zi irène Aoufèn-talt fèr-lèngèrn?"},
+
+  // ── Piscines & Aquatique
+  {c:3,e:"🏊",fr:"La piscine est ouverte de neuf heures à dix-neuf heures.",de:"Das Schwimmbad ist von neun bis neunzehn Uhr geöffnet.",ph:"Dass Chvim-bad ist fon noïn biss noïntsèn Ouir guéeufnèt."},
+  {c:3,e:"🌊",fr:"Le parc aquatique est gratuit.",de:"Der Wasserpark ist kostenlos.",ph:"Dèr Vassèr-park ist kostèn-loss."},
+  {c:3,e:"🎢",fr:"Les toboggans sont ouverts l'après-midi.",de:"Die Rutschen sind nachmittags geöffnet.",ph:"Di Routchène zint nakh-mitagss guéeufnèt."},
+  {c:3,e:"🩱",fr:"Le slip de bain est obligatoire, pas de short.",de:"Badehosen sind Pflicht. Badeshorts sind nicht erlaubt.",ph:"Badeu-hozène zint Pflicht. Badeu-chortss zint nichtt ère-laoubt."},
+  {c:3,e:"🏊‍♂️",fr:"La piscine couverte est chauffée.",de:"Das Hallenbad ist beheizt.",ph:"Dass Halène-bad ist beu-haïtst."},
+  {c:3,e:"👶",fr:"La pataugeoire est réservée aux petits.",de:"Das Planschbecken ist für Kleinkinder.",ph:"Dass Planch-bèkène ist fuir Klaïn-kindèr."},
+  {c:3,e:"🛁",fr:"Le spa et jacuzzi sont au Bulle des Sables.",de:"Der Spa und der Whirlpool befinden sich im Bulle des Sables.",ph:"Dèr Chpa ount dèr Vouirl-poul beu-findène zikh im Bul-dé-Sableu."},
+  {c:3,e:"🚿",fr:"Les douches sont à côté de la piscine.",de:"Die Duschen befinden sich neben dem Schwimmbad.",ph:"Di Douchène beu-findène zikh nèbène dème Chvim-bad."},
+
+  // ── Plage & Mer
+  {c:4,e:"🏖️",fr:"L'accès à la plage est direct depuis le camping.",de:"Der Strandzugang ist direkt vom Campinggelände aus.",ph:"Dèr Chtrant-tsougang ist dirèkt fom Kamping-guélèndeu aous."},
+  {c:4,e:"👮",fr:"La plage est surveillée de dix heures à dix-huit heures.",de:"Der Strand wird von zehn bis achtzehn Uhr bewacht.",ph:"Dèr Chtrant virt fon tsèn biss akhttsèn Ouir beu-vakht."},
+  {c:4,e:"🪑",fr:"Les transats sont disponibles en location.",de:"Liegestühle können gegen eine Gebühr gemietet werden.",ph:"Ligeu-chtuïleu keunen guéguène aïneu Guébüir guémitèt vèrdène."},
+  {c:4,e:"⚠️",fr:"Attention, il y a des méduses aujourd'hui.",de:"Vorsicht, heute gibt es Quallen im Meer.",ph:"For-zikht, hoïteu guibt èss Kval-ène im Mèr."},
+  {c:4,e:"🚩",fr:"Drapeau rouge : baignade interdite.",de:"Rote Fahne bedeutet, Schwimmen ist verboten.",ph:"Roteu Faneu beu-doïtèt, Chvimène ist fèr-botène."},
+  {c:4,e:"🌊",fr:"La mer Méditerranée est magnifique !",de:"Das Mittelmeer ist wunderschön!",ph:"Dass Mitèl-mèr ist voundèr-cheun!"},
+  {c:4,e:"🚲",fr:"Une piste cyclable longe le bord de mer.",de:"Ein Radweg verläuft entlang der Küste.",ph:"Aïn Rad-vèk fèr-leuft ènt-lang dèr Kuusteu."},
+  {c:4,e:"⛅",fr:"Le sable est fin et chaud.",de:"Der Sand ist fein und warm.",ph:"Dèr Zant ist faïn ount varm."},
+
+  // ── Services & Équipements
+  {c:5,e:"📶",fr:"Le Wi-Fi est disponible partout.",de:"Das WLAN ist überall auf dem Campinggelände verfügbar.",ph:"Dass Vé-lan ist ubèr-al aouf dème Kamping-guélèndeu fèr-fuig-bar."},
+  {c:5,e:"💸",fr:"Le Wi-Fi est payant. Demandez le code à la réception.",de:"Das WLAN ist kostenpflichtig. Fragen Sie an der Rezeption nach dem Code.",ph:"Dass Vé-lan ist kostène-pflikhtig. Fragène zi an dèr Rètsèptsion nakh dème Kode."},
+  {c:5,e:"🍽️",fr:"Le restaurant est ouvert le soir à partir de dix-neuf heures.",de:"Das Restaurant ist abends ab neunzehn Uhr geöffnet.",ph:"Dass Rèstoran ist abèntss ap noïntsèn Ouir guéeufnèt."},
+  {c:5,e:"🥐",fr:"La boulangerie ouvre à huit heures.",de:"Die Bäckerei öffnet um acht Uhr.",ph:"Di Bèkèraï eufnèt oom akht Ouir."},
+  {c:5,e:"🛒",fr:"L'épicerie est ouverte de huit heures à vingt heures.",de:"Der Campingmarkt ist von acht bis zwanzig Uhr geöffnet.",ph:"Dèr Kamping-markt ist fon akht biss tsvantzig Ouir guéeufnèt."},
+  {c:5,e:"🚿",fr:"Les sanitaires sont sur votre droite.",de:"Die Sanitäranlagen befinden sich auf Ihrer rechten Seite.",ph:"Di Zanité-r-anlagène beu-findène zikh aouf irèr rèkhtène Zaïteu."},
+  {c:5,e:"🧺",fr:"La laverie est dans le bloc central.",de:"Die Waschküche befindet sich im Zentralgebäude.",ph:"Di Vach-kuicheu beu-findèt zikh im Tsèntral-guéboudeu."},
+  {c:5,e:"🚴",fr:"Vous pouvez louer des vélos ici.",de:"Sie können hier Fahrräder ausleihen.",ph:"Zi keunen hir Far-rèdèr aous-laïuène."},
+  {c:5,e:"🎭",fr:"Il y a des animations tous les soirs en saison.",de:"In der Saison gibt es jeden Abend Unterhaltungsprogramm.",ph:"In dèr Zaïzon guibt èss yèdène Abènt Ountèr-haltoungss-programm."},
+  {c:5,e:"👦",fr:"Le club enfants accueille les cinq à douze ans.",de:"Der Kinderclub nimmt Kinder von fünf bis zwölf Jahren auf.",ph:"Dèr Kindèr-kloub nimt Kindèr fon fuunf biss tsvelf Yarène aouf."},
+  {c:5,e:"🧖",fr:"Le spa propose des massages et un hammam.",de:"Der Spa bietet Massagen und ein Hammam an.",ph:"Dèr Chpa bitèt Massagène ount aïn Hamam an."},
+  {c:5,e:"🎾",fr:"Vous avez accès aux trois campings.",de:"Sie haben Zugang zu allen drei Campings.",ph:"Zi habène Tsougang tsou alène draï Kampingss."},
+  {c:5,e:"🅿️",fr:"Le parking se trouve à l'entrée.",de:"Der Parkplatz befindet sich am Eingang des Campings.",ph:"Dèr Park-platss beu-findèt zikh am Aïn-gang dèss Kampingss."},
+
+  // ── Règles & Sécurité
+  {c:6,e:"🌙",fr:"Le silence est obligatoire après vingt-deux heures.",de:"Ab zweiundzwanzig Uhr gilt Nachtruhe auf dem Camping.",ph:"Ap tsvèï-ount-tsvantzig Ouir guilt Nakht-rou aouf dème Kamping."},
+  {c:6,e:"🚗",fr:"La vitesse est limitée à dix kilomètres par heure.",de:"Die Höchstgeschwindigkeit beträgt zehn Kilometer pro Stunde.",ph:"Di Heukst-guéchvindighkaït beu-trègt tsèn Kilomètèr pro Chtounde."},
+  {c:6,e:"🚫",fr:"Le bracelet doit être porté en permanence.",de:"Das Armband muss jederzeit getragen werden.",ph:"Dass Arm-band mouss yèdèr-tsaït guétragène vèrdène."},
+  {c:6,e:"🗑️",fr:"Les poubelles se trouvent à l'entrée.",de:"Die Mülleimer befinden sich am Eingang des Campings.",ph:"Di Muul-aïmèr beu-findène zikh am Aïn-gang dèss Kampingss."},
+  {c:6,e:"♻️",fr:"Merci de trier vos déchets.",de:"Bitte trennen Sie Ihren Abfall.",ph:"Biteu trènène zi irène Apfal."},
+  {c:6,e:"🔥",fr:"Les barbecues sont interdits sur les emplacements.",de:"Grillen auf den Stellplätzen ist verboten.",ph:"Grilène aouf dène Chtel-plètsène ist fèr-botène."},
+  {c:6,e:"🏃",fr:"Les enfants doivent être accompagnés la nuit.",de:"Kinder müssen nachts von Erwachsenen begleitet werden.",ph:"Kindèr muissène nakhts fon Èr-vakhzènène beu-glaïtèt vèrdène."},
+
+  // ── Urgences & Problèmes
+  {c:7,e:"🆘",fr:"En cas d'urgence, appelez le quinze ou le dix-huit.",de:"Im Notfall rufen Sie bitte fünfzehn oder achtzehn an.",ph:"Im Not-fal roufène zi biteu fuunftsèn ödèr akhttsèn an."},
+  {c:7,e:"🏥",fr:"Je vais appeler les secours immédiatement.",de:"Ich rufe sofort den Notdienst an.",ph:"Ikh roufeu zofort dène Not-dinst an."},
+  {c:7,e:"💊",fr:"La pharmacie la plus proche est à cinq cents mètres.",de:"Die nächste Apotheke ist fünfhundert Meter entfernt.",ph:"Di nèkhsteu Apoté-keu ist fuunfhoundèrt Mètèr ènt-fèrnt."},
+  {c:7,e:"🔧",fr:"Je vais envoyer quelqu'un pour réparer.",de:"Ich schicke jemanden vorbei, um das zu reparieren.",ph:"Ikh chikeu yèmandène forbèï, oom dass tsou rèparitène."},
+  {c:7,e:"🔇",fr:"Veuillez baisser le volume, s'il vous plaît.",de:"Bitte drehen Sie die Musik leiser.",ph:"Biteu drèuène zi di Mouzik laïzèr."},
+  {c:7,e:"🚔",fr:"Pour un vol, appelez le dix-sept.",de:"Bei einem Diebstahl rufen Sie bitte die siebzehn an.",ph:"Baï aïnème Dip-chtal roufène zi biteu di zibttsèn an."},
+  {c:7,e:"🔐",fr:"J'ai perdu mon bracelet.",de:"Ich habe mein Armband verloren.",ph:"Ikh habeu maïn Arm-band fèr-lorène."},
+  {c:7,e:"🚿",fr:"Il n'y a pas d'eau chaude dans le mobil-home.",de:"Im Mobilheim gibt es kein warmes Wasser.",ph:"Im Mobil-haïm guibt èss kaïn warmèss Vassèr."},
+
+  // ── Région & Sorties
+  {c:8,e:"🏘️",fr:"Le village de Marseillan est à sept kilomètres.",de:"Das Dorf Marseillan liegt sieben Kilometer entfernt.",ph:"Dass Dorf Marsèyan light zibène Kilomètèr ènt-fèrnt."},
+  {c:8,e:"⛵",fr:"Sète et son canal sont très pittoresques.",de:"Sète und sein Kanal sind sehr malerisch.",ph:"Sèt ount zaïn Kanal zint zèr malèrish."},
+  {c:8,e:"🚴",fr:"Une piste cyclable mène jusqu'à Marseillan.",de:"Ein Radweg führt bis nach Marseillan.",ph:"Aïn Rad-vèk fuirt biss nakh Marsèyan."},
+  {c:8,e:"🍷",fr:"Le Noilly Prat se déguste au port de Marseillan.",de:"Den Noilly Prat kann man im Hafen von Marseillan probieren.",ph:"Dène Noyay-Prat kan man im Hafène fon Marsèyan probièrène."},
+  {c:8,e:"🎡",fr:"Cap d'Agde est à dix minutes en voiture.",de:"Cap d'Agde ist zehn Minuten mit dem Auto entfernt.",ph:"Kap-d'Agdeu ist tsèn Minutène mit dème Aouto ènt-fèrnt."},
+  {c:8,e:"🌊",fr:"L'étang de Thau est à quelques minutes.",de:"Der Thau-See ist nur wenige Minuten entfernt.",ph:"Dèr To-Zé ist nour vènigeu Minutène ènt-fèrnt."},
+  {c:8,e:"🐚",fr:"Les huîtres de Thau sont délicieuses.",de:"Die Austern aus dem Thau-See sind köstlich.",ph:"Di Aoustèrne aous dème To-Zé zint keustlikh."},
+  {c:8,e:"🎪",fr:"Le marché de Marseillan a lieu le mardi matin.",de:"Der Markt von Marseillan findet dienstags morgens statt.",ph:"Dèr Markt fon Marsèyan findèt dinstaags morgèns chtat."},
+
+  // ── Politesse & Quotidien
+  {c:9,e:"🌞",fr:"Bonjour !",de:"Guten Morgen! Guten Tag!",ph:"Gouten-Morgène! Gouten-Tag!"},
+  {c:9,e:"🌙",fr:"Bonne nuit !",de:"Gute Nacht!",ph:"Gouteu-Nakht!"},
+  {c:9,e:"👋",fr:"Au revoir et bonne route !",de:"Auf Wiedersehen und gute Weiterreise!",ph:"Aouf-Vidèr-zèène ount gouteu Vaïtèr-raïzeu!"},
+  {c:9,e:"🙏",fr:"Merci beaucoup !",de:"Vielen Dank!",ph:"Filène-Dank!"},
+  {c:9,e:"😅",fr:"Je ne comprends pas l'allemand.",de:"Ich verstehe leider kein Deutsch.",ph:"Ikh fèr-chtèeu laïdèr kaïn Doïtch."},
+  {c:9,e:"🇫🇷",fr:"Parlez-vous français ?",de:"Sprechen Sie Französisch?",ph:"Chprèkhène zi Frant-seuzich?"},
+  {c:9,e:"🇬🇧",fr:"Parlez-vous anglais ?",de:"Sprechen Sie Englisch?",ph:"Chprèkhène zi Engliç?"},
+  {c:9,e:"✋",fr:"Un moment, s'il vous plaît.",de:"Einen Moment bitte.",ph:"Aïnène Momènt biteu."},
+  {c:9,e:"📍",fr:"Suivez-moi, je vous montre.",de:"Folgen Sie mir, ich zeige es Ihnen.",ph:"Folgène zi mir, ikh tsaïgueu èss irène."},
+  {c:9,e:"😊",fr:"Avez-vous d'autres questions ?",de:"Haben Sie noch weitere Fragen?",ph:"Habène zi nokh vaïtèrreu Fragène?"},
+  {c:9,e:"🎉",fr:"Passez d'excellentes vacances !",de:"Ich wünsche Ihnen einen schönen Urlaub!",ph:"Ikh vuuncheu irène aïnène cheunène Ourlaoup!"},
+  {c:9,e:"🔁",fr:"Pouvez-vous répéter, s'il vous plaît ?",de:"Könnten Sie das bitte wiederholen?",ph:"Keuntène zi dass biteu vidèr-holène?"},
+];
+
+/* Catégories — index numérique, pas de string avec & */
+const CATS = [
+  {id:0, name:"Accueil & Arrivée",    col:"#1a6b8a"},
+  {id:1, name:"Hébergements",         col:"#2d9fc5"},
+  {id:2, name:"Réservation",          col:"#d4a017"},
+  {id:3, name:"Piscines & Aquatique", col:"#00b4c4"},
+  {id:4, name:"Plage & Mer",          col:"#0e8a7a"},
+  {id:5, name:"Services",             col:"#6a5acd"},
+  {id:6, name:"Règles & Sécurité",    col:"#c05050"},
+  {id:7, name:"Urgences",             col:"#e8604a"},
+  {id:8, name:"Région & Sorties",     col:"#3aaa6b"},
+  {id:9, name:"Politesse",            col:"#c07830"},
+];
+
+/* ══ STATE ══ */
+let favs = new Set();
+let curTab = 'ph';
+let curCat = null;   // index numérique ou null
+let qList=[], qIdx=0, qScore=0, qDone=false;
+let curAudioBtn=null, curQAudioBtn=null;
+
+/* ══ AUDIO ══ */
+function speak(de, btn){
+  if(!window.speechSynthesis) return;
+  if(curAudioBtn===btn){
+    window.speechSynthesis.cancel();
+    resetBtn(btn); curAudioBtn=null; return;
+  }
+  if(curAudioBtn) resetBtn(curAudioBtn);
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(de);
+  u.lang='de-DE'; u.rate=0.82; u.pitch=1.0;
+  btn.classList.add('playing'); btn.innerHTML='⏹ Stop';
+  curAudioBtn=btn;
+  u.onend=()=>{resetBtn(btn);curAudioBtn=null;};
+  u.onerror=()=>{resetBtn(btn);curAudioBtn=null;};
+  window.speechSynthesis.speak(u);
+}
+function resetBtn(b){ if(!b)return; b.classList.remove('playing'); b.innerHTML='🔊 Écouter'; }
+
+/* ══ FAVORIS ══ */
+function togFav(i){
+  favs.has(i)?favs.delete(i):favs.add(i);
+  document.getElementById('stFav').textContent=favs.size;
+  document.querySelectorAll('[data-fi="'+i+'"]').forEach(b=>{
+    b.classList.toggle('on',favs.has(i));
+    b.textContent=favs.has(i)?'⭐ Favori':'☆ Ajouter';
+  });
+  if(curTab==='fv') renderFavs();
+}
+
+/* ══ CARTE PHRASE ══ */
+function card(p,i,q){
+  const f=favs.has(i);
+  const frTxt = q ? p.fr.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>') : p.fr;
+  return `<div class="phrase-card${f?' fav':''}">
+    <div class="card-fr"><span class="ce">${p.e}</span>${frTxt}</div>
+    <div class="card-ph">${p.ph}</div>
+    <div class="card-btns">
+      <button class="btn-fav${f?' on':''}" data-fi="${i}" onclick="togFav(${i})">${f?'⭐ Favori':'☆ Ajouter'}</button>
+      <button class="btn-listen" onclick="speak(P[${i}].de,this)">🔊 Écouter</button>
+    </div>
+  </div>`;
+}
+
+/* ══ GRILLE CATÉGORIES ══ */
+function renderCats(){
+  const counts={};
+  P.forEach(p=>{ counts[p.c]=(counts[p.c]||0)+1; });
+  const firstEmoji={};
+  P.forEach(p=>{ if(!firstEmoji[p.c]) firstEmoji[p.c]=p.e; });
+  document.getElementById('catGrid').innerHTML = CATS.map(cat=>`
+    <div class="cat-card" style="border-bottom-color:${cat.col}" onclick="openCat(${cat.id})">
+      <span class="cc-em">${firstEmoji[cat.id]||'📁'}</span>
+      <div class="cc-nm">${cat.name}</div>
+      <span class="cc-ct">${counts[cat.id]||0} phrases</span>
+    </div>`).join('');
+}
+
+/* ══ OUVRIR CATÉGORIE — index numérique, zéro risque de bug ══ */
+function openCat(id){
+  curCat=id;
+  document.getElementById('scrCats').style.display='none';
+  document.getElementById('scrSrch').style.display='none';
+  document.getElementById('scrPh').style.display='block';
+  const cat=CATS.find(c=>c.id===id);
+  document.getElementById('backBtn').classList.add('on');
+  document.getElementById('hInfo').style.display='none';
+  document.getElementById('logoImg').style.opacity='0';
+  document.getElementById('hCat').textContent=cat?cat.name:'';
+  document.getElementById('hCat').classList.add('on');
+  const items=P.map((p,i)=>({p,i})).filter(({p})=>p.c===id);
+  document.getElementById('phList').innerHTML=items.map(({p,i})=>card(p,i,'')).join('');
+}
+
+/* ══ RETOUR GRILLE ══ */
+function goBack(){
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  curCat=null;
+  document.getElementById('scrCats').style.display='block';
+  document.getElementById('scrPh').style.display='none';
+  document.getElementById('scrSrch').style.display='none';
+  document.getElementById('backBtn').classList.remove('on');
+  document.getElementById('hInfo').style.display='';
+  document.getElementById('logoImg').style.opacity='';
+  document.getElementById('hCat').classList.remove('on');
+  document.getElementById('srchInput').value='';
+  document.getElementById('srchX').classList.remove('on');
+}
+
+/* ══ RECHERCHE ══ */
+function onSearch(v){
+  document.getElementById('srchX').classList.toggle('on', v.length>0);
+  if(!v.trim()){
+    document.getElementById('scrSrch').style.display='none';
+    if(curCat!==null){ document.getElementById('scrPh').style.display='block'; }
+    else { document.getElementById('scrCats').style.display='block'; }
+    return;
+  }
+  if(curTab!=='ph') goTab('ph');
+  const q=v.toLowerCase();
+  const res=P.map((p,i)=>({p,i})).filter(({p})=>
+    p.fr.toLowerCase().includes(q)||p.ph.toLowerCase().includes(q)
+  );
+  document.getElementById('scrCats').style.display='none';
+  document.getElementById('scrPh').style.display='none';
+  document.getElementById('scrSrch').style.display='block';
+  document.getElementById('backBtn').classList.remove('on');
+  document.getElementById('hInfo').style.display='';
+  document.getElementById('logoImg').style.opacity='';
+  document.getElementById('hCat').classList.remove('on');
+  document.getElementById('srInfo').textContent=res.length
+    ?`${res.length} résultat${res.length>1?'s':''} pour « ${v} »`:'';
+  document.getElementById('srList').innerHTML=res.length
+    ?res.map(({p,i})=>card(p,i,v)).join('')
+    :`<div class="nores"><span class="big">🔍</span><p>Aucun résultat pour <strong>« ${v} »</strong></p></div>`;
+}
+function clearSearch(){
+  document.getElementById('srchInput').value='';
+  onSearch('');
+}
+
+/* ══ NAVIGATION ONGLETS ══ */
+function goTab(t){
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  curAudioBtn=null; curQAudioBtn=null;
+  curTab=t;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('view-'+t).classList.add('on');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+t).classList.add('on');
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('nav-'+t).classList.add('on');
+  document.getElementById('backBtn').classList.remove('on');
+  document.getElementById('hInfo').style.display='';
+  document.getElementById('logoImg').style.opacity='';
+  document.getElementById('hCat').classList.remove('on');
+  if(t!=='ph'){ document.getElementById('srchInput').value=''; document.getElementById('srchX').classList.remove('on'); }
+  if(t==='ph'){
+    curCat=null;
+    document.getElementById('scrCats').style.display='block';
+    document.getElementById('scrPh').style.display='none';
+    document.getElementById('scrSrch').style.display='none';
+  }
+  if(t==='qz'){ if(qList.length===0) initQuiz(); renderQuiz(); }
+  if(t==='fv') renderFavs();
+}
+
+/* ══ QUIZ ORAL ══
+   On entend la phrase → on choisit le bon sens en français */
+function initQuiz(){
+  qList=[...P].sort(()=>Math.random()-.5).slice(0,10);
+  qIdx=0; qScore=0; qDone=false;
+}
+function renderQuiz(){
+  const w=document.getElementById('qzWrap');
+  if(qIdx>=qList.length){
+    document.getElementById('stScore').textContent=qScore+'/10';
+    w.innerHTML=`<div class="qresult">
+      <h2>${qScore>=8?'🏆':qScore>=5?'👏':'💪'} ${qScore}/10</h2>
+      <p>${qScore>=8
+        ?'Ausgezeichnet! Tu comprends très bien l\'allemand oral du camping !'
+        :qScore>=5
+        ?'Gut gemacht! Continue à t\'entraîner, tu progresses !'
+        :'Weiter üben! Écoute et répète encore, ça vient !'}</p>
+      <button class="qrestart" onclick="initQuiz();renderQuiz()">🔄 Rejouer</button>
+    </div>`;
+    return;
+  }
+  const q=qList[qIdx];
+  // 3 mauvaises réponses françaises
+  const bad=P.filter(p=>p.fr!==q.fr).sort(()=>Math.random()-.5).slice(0,3);
+  const opts=[...bad,q].sort(()=>Math.random()-.5);
+  const qi=P.indexOf(q);
+  w.innerHTML=`<div class="qcard">
+    <div class="qprog"><div class="qprog-bar" style="width:${(qIdx/10)*100}%"></div></div>
+    <div class="qlbl">🎧 Écoute et trouve le sens — ${qIdx+1} / 10</div>
+    <div class="q-audio-zone">
+      <span class="q-emoji">${q.e}</span>
+      <div class="q-audio-label">Appuie pour entendre la phrase</div>
+      <button class="q-listen-btn" id="qListenBtn" onclick="qSpeak(P[${qi}].de, this)">🔊 Écouter la phrase</button>
+      <div class="q-instr">Puis choisis la bonne traduction ↓</div>
+    </div>
+    <div class="qopts">${opts.map(o=>`<button class="qopt" onclick="ansQ(this,${JSON.stringify(o.fr)},${JSON.stringify(q.fr)})">${o.fr}</button>`).join('')}</div>
+    <div class="qfb" id="qfb"></div>
+    <button class="qnext" id="qnext" onclick="qIdx++;qDone=false;renderQuiz()">Suivant →</button>
+  </div>`;
+}
+
+function qSpeak(de, btn){
+  if(!window.speechSynthesis) return;
+  if(curQAudioBtn===btn){
+    window.speechSynthesis.cancel();
+    btn.classList.remove('playing'); btn.innerHTML='🔊 Écouter la phrase';
+    curQAudioBtn=null; return;
+  }
+  if(curQAudioBtn){ curQAudioBtn.classList.remove('playing'); curQAudioBtn.innerHTML='🔊 Écouter la phrase'; }
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(de);
+  u.lang='de-DE'; u.rate=0.80; u.pitch=1.0;
+  btn.classList.add('playing'); btn.innerHTML='⏹ Stop';
+  curQAudioBtn=btn;
+  u.onend=()=>{ btn.classList.remove('playing'); btn.innerHTML='🔊 Réécouter'; curQAudioBtn=null; };
+  u.onerror=()=>{ btn.classList.remove('playing'); btn.innerHTML='🔊 Écouter la phrase'; curQAudioBtn=null; };
+  window.speechSynthesis.speak(u);
+}
+
+function ansQ(btn,chosen,correct){
+  if(qDone) return; qDone=true;
+  document.querySelectorAll('.qopt').forEach(b=>b.style.pointerEvents='none');
+  const fb=document.getElementById('qfb');
+  if(chosen===correct){
+    btn.classList.add('correct'); qScore++;
+    fb.className='qfb on c'; fb.textContent='✅ Richtig! Bonne réponse !';
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.qopt').forEach(b=>{ if(b.textContent===correct) b.classList.add('correct'); });
+    fb.className='qfb on w'; fb.textContent='❌ Falsch. C\'était : '+correct;
+  }
+  document.getElementById('qnext').classList.add('on');
+}
+
+/* ══ FAVORIS ══ */
+function renderFavs(){
+  const el=document.getElementById('fvContent');
+  if(!favs.size){
+    el.innerHTML=`<div class="empty"><span class="big">☆</span><p>Aucun favori pour l'instant.<br>Appuie sur <strong>☆ Ajouter</strong> sur une phrase.</p></div>`;
+    return;
+  }
+  el.innerHTML=[...favs].map(i=>card(P[i],i,'')).join('');
+}
+
+/* ══ INIT ══ */
+renderCats();
+</script>
+</body>
+</html>
